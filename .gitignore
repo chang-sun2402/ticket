@@ -1,0 +1,14 @@
+.ipynb_checkpoints/
+__pycache__/
+.pytest_cache/
+.streamlit/secrets.toml
+*.pyc
+.DS_Store
+
+# Local environments
+.venv/
+env/
+ENV/
+
+# Generated assets
+reports/

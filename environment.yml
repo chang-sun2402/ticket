@@ -1,0 +1,17 @@
+name: acc102_track2
+channels:
+  - defaults
+dependencies:
+  - python=3.11
+  - pandas
+  - numpy
+  - matplotlib
+  - seaborn
+  - nbformat
+  - nbconvert
+  - notebook
+  - jupyterlab
+  - pip
+  - pip:
+      - yfinance
+      - streamlit

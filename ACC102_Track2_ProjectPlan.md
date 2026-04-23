@@ -1,156 +1,214 @@
-# ACC102 Mini Assignment · 项目规划文档
+# ACC102 Mini Assignment · Project Plan
 
-> **赛道**：Track 2 – GitHub Data Analysis Project
-> **截止时间**：2026年4月27日 23:59（LMO提交）
-> **目标分数**：80分以上 + Bonus（最多+10）
-
----
-
-## 1. 项目概述
-
-| 项目 | 内容 |
-|------|------|
-| 题目 | A股/美股板块轮动分析 |
-| 目标用户 | 个人投资者、金融/经济学学生 |
-| 核心问题 | 不同市场板块（科技、消费、能源、医疗、金融）在不同时期的收益表现是否存在轮动规律？哪些板块在特定宏观环境下表现更强？ |
-| 数据来源 | Yahoo Finance（通过 `yfinance` 库获取，免费、稳定） |
-| 分析时间段 | 2020年1月 – 2024年12月（含新冠、加息、复苏等多个周期） |
+> **Track**: Track 2 – GitHub Data Analysis Project
+> **Deadline**: 27 April 2026, 23:59 (LMO submission)
+> **Target Score**: 80+ core + Bonus (up to +10)
 
 ---
 
-## 2. 选择 Track 2 的理由
+## 1. Project Overview
 
-- 数据获取方便，`yfinance` 一行代码即可下载，无需注册
-- GitHub 展示效果好，README 专业度直接影响 Bonus 得分
-- 分析层次丰富，天然契合 30 分 Python 技术要求
-- 结论直观有商业意义，Product Design 容易得高分
-- **主交付用 notebook 最稳妥**，如有余力可附带 Streamlit 作为展示补充，但不建议替代 notebook
+| Item | Description |
+|------|-------------|
+| Title | US Equity Sector Rotation Analysis |
+| Target Users | Individual investors seeking to adjust sector allocations across macroeconomic cycles; Finance/Economics students learning about sector-level market behaviour |
+| Core Question | Do different US market sectors (Technology, Healthcare, Energy, Financials, Consumer Discretionary) exhibit rotation patterns over time? Which sectors outperform under specific macroeconomic conditions? |
+| Data Source | Yahoo Finance via the `yfinance` Python library (free, no registration required, widely used in academic and practitioner contexts) |
+| Analysis Period | January 2020 – December 2024 (covering COVID-19 crash, monetary tightening, and recovery cycles) |
+| ETFs Used | XLK (Technology), XLV (Healthcare), XLE (Energy), XLF (Financials), XLY (Consumer Discretionary) — all are SPDR sector ETFs with high liquidity and long histories |
 
 ---
 
-## 3. 提交清单
+## 2. Rationale for Choosing Track 2
 
-### 必交材料（LMO）
-- [ ] `notebook.ipynb` — 完整 Python 分析 notebook（**主交付物**）
-- [ ] 反思报告（500–800字，含 AI 声明）
-- [ ] GitHub 仓库链接
-- [ ] Mediasite 演示视频链接（1–3分钟）
+- **Analytical depth suits the dataset**: Sector rotation is a multi-dimensional problem that naturally requires data acquisition, cleaning, transformation, visualisation, and comparative analysis — aligning well with the 30-mark Python Implementation criterion.
+- **GitHub as a professional portfolio**: Publishing on GitHub creates a reusable, publicly accessible portfolio piece that demonstrates both analytical and communication skills.
+- **Reproducibility and transparency**: A well-structured GitHub repository with a clear README, notebook, and requirements file makes the analytical workflow fully reproducible — a hallmark of responsible data practice.
+- **Clear user-facing output**: The analysis produces actionable sector-level insights that can be directly communicated to the target audience, supporting the Product Design criterion.
+- **Bonus opportunity**: Track 2 offers up to 10 bonus marks for GitHub quality, incentivising clean code structure and thorough documentation.
 
-### 可选加分材料（非必需）
-- [ ] `streamlit_app.py` 或其他轻量交互展示（**仅作展示补充，不替代 notebook**）
+---
 
-### GitHub 仓库须包含
+## 3. Data Ethics & Legal Compliance
+
+- **Lawfulness**: Yahoo Finance data accessed via `yfinance` is publicly available market data. Its use for educational analysis is consistent with Yahoo's Terms of Service for non-commercial, academic purposes.
+- **Reliability**: SPDR sector ETFs (XLK, XLV, XLE, XLF, XLY) are among the most liquid and widely tracked ETFs, ensuring data quality and representativeness.
+- **Acknowledgement**: The data source (Yahoo Finance) and the access date will be clearly stated in both the notebook and the README, as required by the assignment.
+- **Limitations**: End-of-day adjusted closing prices do not capture intraday volatility or after-hours movements. This limitation will be explicitly noted in the analysis and reflection report.
+
+---
+
+## 4. Submission Checklist
+
+### Required Materials (via LMO)
+- [ ] `notebook.ipynb` — Full Python analysis notebook (**primary deliverable**)
+- [ ] Reflection report (500–800 words, including AI disclosure)
+- [ ] GitHub repository link
+- [ ] Mediasite demo video link (1–3 minutes)
+
+### Optional Bonus Materials
+- [ ] `streamlit_app.py` or lightweight interactive demo (**supplementary only, does not replace notebook**)
+
+### GitHub Repository Must Include
 - [ ] `README.md`
-- [ ] `notebook.ipynb`（主分析与评分依据）
+- [ ] `notebook.ipynb` (primary analysis and marking basis)
 - [ ] `requirements.txt`
-- [ ] `data/`（数据文件，如 <25MB 可直接上传；否则在 README 注明来源）
-- [ ] `figures/`（保存好的图表，可选但加分）
+- [ ] `data/` (data files if <25 MB; otherwise document source in README)
+- [ ] `figures/` (saved charts — optional but adds value)
 
-### GitHub 仓库可选补充
-- [ ] `streamlit_app.py`（用于交互展示，非必需）
-- [ ] `app_screenshots/`（如使用 Streamlit，可放界面截图辅助展示）
-
----
-
-## 4. Python 分析步骤（Notebook 结构）
-
-> 建议采用 **“notebook 为主、Streamlit 为可选补充”** 的交付方式：评分与分析主体放在 `notebook.ipynb`，如需增强展示效果，可额外提供一个轻量 Streamlit app。
-
-### Step 1 · 数据获取
-- 选取代表各板块的 ETF（美股：XLK/XLV/XLE/XLF/XLY；或用 A 股行业 ETF）
-- 用 `yfinance` 下载 2020–2024 年日度收盘价
-- 记录数据来源和访问日期（写在 notebook 的 markdown cell 中）
-
-### Step 2 · 数据清洗
-- 检查并处理缺失值（`dropna` / `fillna`）
-- 计算日收益率（`pct_change()`）
-- 计算月度收益率（`resample('ME')`）
-
-### Step 3 · 分析（核心部分，要做扎实）
-
-| 分析内容 | 实现方式 | 对应得分点 |
-|---------|---------|-----------|
-| 累计收益率对比 | 折线图 | 可视化基础 |
-| 年度/季度收益热力图 | `seaborn.heatmap` | 亮点图表 |
-| 板块间相关性矩阵 | `df.corr()` + heatmap | 关系分析 |
-| 滚动波动率（30日） | `rolling(30).std()` | 风险维度 |
-| 每年最强/最弱板块排名 | `groupby` + 排序 | 洞察总结 |
-
-### Step 4 · 输出结论
-- 总结 3–5 条有实际意义的发现
-- 例："2022年能源板块逆势上涨 XX%，而科技板块下跌 XX%，与美联储加息周期高度相关"
+### GitHub Repository Optional Supplements
+- [ ] `streamlit_app.py` (for interactive demo, not required)
+- [ ] `app_screenshots/` (if Streamlit is used, include interface screenshots)
 
 ---
 
-## 5. README 结构
+## 5. Python Analysis Steps (Notebook Structure)
 
-> 若提供 Streamlit，请在 README 中将其标注为 **optional demo**，不要让 marker 误以为它替代了 notebook。
+> Adopt a **notebook-first, Streamlit-as-supplement** delivery strategy. The notebook is the primary deliverable for marking; Streamlit may be added for enhanced presentation.
+
+### Step 1 · Data Acquisition
+- Download daily adjusted closing prices for XLK, XLV, XLE, XLF, XLY from Yahoo Finance using `yfinance` for the period Jan 2020 – Dec 2024
+- **Rationale**: `yfinance` provides free, programmatic access to Yahoo Finance data with no API key required. Adjusted close prices account for dividends and stock splits, ensuring return calculations are accurate.
+- Record the data source (Yahoo Finance) and access date in a markdown cell at the top of the notebook (assignment requirement)
+- Print dataset shape, date range, and basic statistics to verify download integrity
+
+### Step 2 · Data Cleaning & Preparation
+- Check for missing values using `df.isnull().sum()`; handle with `dropna()` or forward-fill (`ffill`) depending on the pattern
+  - **Rationale**: ETF data is generally clean, but missing values may occur on market holidays. `dropna()` is preferred when gaps are few and random; `ffill` is used when continuity is needed for rolling calculations.
+- Calculate daily returns using `df.pct_change()`
+- Calculate monthly returns using `df.resample('ME').last().pct_change()`
+- Calculate quarterly returns using `df.resample('QE').last().pct_change()`
+  - **Rationale**: Multiple return frequencies allow the analysis to capture both short-term and medium-term rotation patterns.
+
+### Step 3 · Analysis (Core — must be thorough and well-reasoned)
+
+| Analysis | Implementation | Rationale | Marks Alignment |
+|----------|---------------|-----------|-----------------|
+| Cumulative return comparison | Line chart (`matplotlib` / `plotly`) | Cumulative returns show the total wealth trajectory per sector — the most intuitive metric for investors | Visualisation basics |
+| Annual & quarterly return heatmaps | `seaborn.heatmap` | Heatmaps enable rapid visual identification of which sectors outperform/underperform in each period — the core of rotation analysis | Highlight visualisation |
+| Cross-sector correlation matrix | `df.corr()` + `seaborn.heatmap` | Correlation reveals co-movement patterns; low-correlation sectors offer diversification benefits — directly relevant to investor decisions | Relationship analysis |
+| 30-day rolling volatility | `df.rolling(30).std()` | 30 days balances responsiveness and smoothness; shorter windows (e.g., 10d) are too noisy, longer windows (e.g., 60d) lag too much | Risk dimension |
+| Yearly best/worst sector ranking | `groupby` year + sort | Annual rankings summarise rotation patterns concisely and support actionable conclusions | Insight synthesis |
+
+### Step 4 · Conclusions & Insights
+- Summarise 3–5 actionable findings with specific numbers
+- Example: "In 2022, the Energy sector (XLE) rose XX% while Technology (XLK) fell XX%, aligning with the Federal Reserve's tightening cycle — a pattern consistent with historical sector rotation under rising-rate environments."
+- Each finding should connect to the target user's decision-making context
+
+---
+
+## 6. Environment Configuration
+
+| Item | Specification |
+|------|--------------|
+| Python version | 3.10+ |
+| Key dependencies | `yfinance`, `pandas`, `numpy`, `matplotlib`, `seaborn`, `plotly` |
+| Environment file | `requirements.txt` listing all packages with pinned versions (e.g., `yfinance==0.2.36`) |
+| Optional | `environment.yml` for conda users; `streamlit` if the supplementary app is included |
+| Run instructions | The README will include: (1) `pip install -r requirements.txt`; (2) open `notebook.ipynb` in Jupyter; (3) Run All cells |
+
+---
+
+## 7. README Structure
+
+> If Streamlit is provided, clearly label it as an **optional demo** in the README. Do NOT let the marker assume it replaces the notebook.
 
 ```
-# 项目标题（中英文各一句）
+# Project Title (English only)
+
+> Demo Video: [Mediasite link] (placed near the top for immediate visibility)
 
 ## 1. Problem & User
-## 2. Data（来源 + 访问日期 + 主要字段）
-## 3. Methods（Python 分析步骤简述）
-## 4. Key Findings（3–5条结论）
-## 5. How to Run（环境配置 + 运行方式）
-## 6. Demo Video（链接放在靠近顶部）
-## 7. Limitations & Next Steps
+## 2. Data (source + access date + key fields)
+## 3. Methods (Python analysis steps — brief overview)
+## 4. Key Findings (3–5 numbered conclusions)
+## 5. How to Run (environment setup + execution)
+## 6. Limitations & Next Steps
 ```
 
-> ⚠️ Demo 视频链接必须放在 README 靠近顶部，让 marker 一眼找到。
+> ⚠️ The demo video link must be placed near the top of the README so the marker can find it immediately.
 
 ---
 
-## 6. 演示视频内容规划（1–3分钟）
+## 8. Demo Video Plan (1–3 minutes)
 
-| 时间 | 内容 |
-|------|------|
-| 0–20秒 | 介绍问题背景和目标用户 |
-| 20–40秒 | 简单介绍数据来源和结构 |
-| 40–120秒 | **运行 notebook 代码**，展示关键分析步骤（不是截图，要跑） |
-| 120–160秒 | 展示主要图表，解释发现（如有 Streamlit，可用少量时间补充展示交互界面） |
-| 160–180秒 | 展示 repo 结构（README 在哪、notebook 在哪；如有 app，也说明其为可选补充） |
+| Time | Content |
+|------|---------|
+| 0–20s | Introduce the problem background and target users |
+| 20–40s | Briefly describe the data source and structure |
+| 40–120s | **Run notebook code cells live**, showing key analysis steps (not screenshots — actual execution) |
+| 120–160s | Present main charts and explain findings (if Streamlit is available, briefly show the interactive interface) |
+| 160–180s | Show repository structure (README location, notebook location; if app exists, clarify it is supplementary) |
 
-> ⚠️ 视频必须上传到 **Mediasite**（不是 YouTube / B站），这是 Track 2 的要求。
-
----
-
-## 7. 反思报告提纲（500–800字）
-
-1. 分析问题与目标用户是什么
-2. 为什么选择这个数据集
-3. 使用了哪些 Python 方法
-4. 主要发现和洞察
-5. 局限性与可改进的地方（数据时效、样本选择偏差等）
-6. 个人贡献与学习收获
-7. **AI 声明**（放在最后，注明工具名称、版本、访问日期、用途）
+> ⚠️ Video must be uploaded to **Mediasite** (not YouTube / Bilibili / other platforms) — this is a Track 2 requirement.
+> ⚠️ Video narration or subtitles must be in English (assignment requirement). Text-to-speech tools (e.g., MiniMax) are acceptable.
 
 ---
 
-## 8. 常见失分点（自查清单）
+## 9. Reflection Report Outline (500–800 words)
 
-- [ ] notebook 中使用了绝对路径 → 改为相对路径
-- [ ] 数据来源没有注明访问日期
-- [ ] README 没有 Demo 视频链接
-- [ ] 视频只展示图表结果，没有运行代码的过程
-- [ ] 反思报告没有 AI 声明
-- [ ] 提交到 LMO 时忘记附上 notebook 和反思报告（只有链接不够）
+1. State the analytical problem and intended user/audience
+2. Describe the dataset and explain why it was selected
+3. Explain the Python methods used
+4. Summarise the main insights or outputs produced
+5. Evaluate limitations, reliability issues, and possible improvements (e.g., data timeliness, sample selection bias, only US market covered)
+6. Briefly explain your own contribution, decisions, and what you learned
+7. **AI Disclosure** (placed at the end, using the format below)
 
----
+### AI Disclosure Format
 
-## 9. 预期得分估算
+For each AI tool used, provide the following:
 
-| 评分维度 | 满分 | 预期 |
-|---------|------|------|
-| 问题定义与数据相关性 | 20 | 17–18 |
-| Python 实现与技术执行 | 30 | 25–27 |
-| 分析、洞察与解读 | 20 | 16–18 |
-| 产品设计与用户沟通 | 20 | 16–18 |
-| 反思与职业规范 | 10 | 8–9 |
-| **核心合计** | **100** | **~82–90** |
-| Bonus（GitHub质量） | +10 | +6–9 |
+```
+AI Tool: [tool name]
+Model/Version: [e.g., GPT-4o, Claude 3.5 Sonnet]
+Access Date: [YYYY-MM-DD]
+Purpose: [specific use, e.g., "assisted with data cleaning code", "helped refine chart labels"]
+```
 
 ---
 
-*文档版本：v1.0 · 生成日期：2026-04-19*
+## 10. Common Pitfalls — Self-Check List
+
+- [ ] Notebook uses absolute file paths → change to relative paths
+- [ ] Data source does not include an access date
+- [ ] README missing the demo video link
+- [ ] Video only shows chart results without running code live
+- [ ] Reflection report missing the AI disclosure
+- [ ] Submitted only links on LMO without attaching the notebook and reflection report
+- [ ] **All materials not in English (notebook, README, reflection report, video narration must be in English)**
+- [ ] `requirements.txt` does not match actual dependencies used
+- [ ] Notebook or README missing setup/run instructions
+
+---
+
+## 11. Project Timeline
+
+| Date | Milestone |
+|------|-----------|
+| Apr 22 | Finalise project plan; set up GitHub repository structure |
+| Apr 23 | Complete data acquisition and cleaning (Steps 1–2 in notebook) |
+| Apr 24 | Complete core analysis and visualisation (Step 3 in notebook) |
+| Apr 25 | Write conclusions; polish notebook with markdown narrative; generate saved figures |
+| Apr 26 | Write README; record and upload demo video to Mediasite; write reflection report |
+| Apr 27 | Final self-check against checklist; submit all materials via LMO before 23:59 |
+
+---
+
+## 12. Estimated Score
+
+| Criterion | Max | Conservative Estimate |
+|-----------|-----|-----------------------|
+| Problem Definition and Data Relevance | 20 | 16–18 |
+| Python Implementation and Technical Execution | 30 | 23–26 |
+| Analysis, Insight, and Interpretation | 20 | 15–17 |
+| Product Design, Communication, and User Focus | 20 | 15–17 |
+| Reflection, Limitations, and Professional Practice | 10 | 7–9 |
+| **Core Total** | **100** | **~76–87** |
+| Bonus (GitHub quality) | +10 | +5–8 |
+
+> Estimates are deliberately conservative. Actual scores depend on execution quality, depth of analysis, and how well the final deliverables communicate value to the target user.
+
+---
+
+*Document version: v2.0 · Updated: 2026-04-22*

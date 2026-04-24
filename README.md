@@ -84,7 +84,7 @@ Findings below are derived from the complete analytical workflow in `notebook.ip
 ### Option A: pip
 
 ```bash
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 jupyter nbconvert --to notebook --execute --inplace notebook.ipynb
 ```
 
